@@ -1,0 +1,39 @@
+apply plugin:'application'
+
+mainClassName = "de.uniba.dsg.jaxws.DemoWSClient"
+
+run {
+    standardInput = System.in
+}
+
+configurations {
+    jaxws
+}
+
+dependencies {
+    jaxws 'com.sun.xml.ws:jaxws-tools:2.2.8'
+}
+
+project.ext {
+    destDir = file("${projectDir}/src/main/generated")
+}
+
+task wsimport {
+    doLast {
+        ant {
+            destDir.mkdirs()
+
+            taskdef(name:'wsimport',
+                    classname:'com.sun.tools.ws.ant.WsImport',
+                    classpath:configurations.jaxws.asPath)
+            wsimport(keep:true,
+                    xnocompile: true,
+                    sourcedestdir: destDir,
+                    package: 'de.uniba.dsg.jaxws',
+                    wsdl: "${projectDir}/src/main/resources/historyservice.wsdl")
+        }
+    }
+}
+clean.delete destDir
+compileJava.source = ["${projectDir}/src/main/java", "${projectDir}/src/main/generated"]
+compileJava.dependsOn wsimport

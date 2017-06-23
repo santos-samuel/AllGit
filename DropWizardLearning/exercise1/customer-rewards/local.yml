@@ -1,0 +1,4 @@
+couchbase.nodes:
+- http://ukirs031.global.tesco.org:8091/pools
+couchbase.bucket: dwlearning
+couchbase.password: password

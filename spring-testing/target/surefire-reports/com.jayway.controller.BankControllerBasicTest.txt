@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.jayway.controller.BankControllerBasicTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.431 sec - in com.jayway.controller.BankControllerBasicTest

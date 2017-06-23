@@ -1,0 +1,16 @@
+com\couchbase\products\Application.class
+com\couchbase\product\controller\PriceController$2.class
+com\couchbase\product\breweries\BreweriesController$3.class
+com\couchbase\product\controller\PriceController.class
+com\couchbase\products\CouchbaseService.class
+com\couchbase\products\CouchbaseService$5$1.class
+com\couchbase\products\CouchbaseService$3.class
+com\couchbase\product\breweries\BreweriesController$1.class
+com\couchbase\products\CouchbaseService$4.class
+com\couchbase\products\CouchbaseService$2.class
+com\couchbase\products\CouchbaseService$5.class
+com\couchbase\products\CouchbaseService$1.class
+com\couchbase\product\breweries\BreweriesController.class
+com\couchbase\product\breweries\BreweriesController$2.class
+com\couchbase\product\controller\PriceController$1.class
+com\couchbase\products\config\Database.class

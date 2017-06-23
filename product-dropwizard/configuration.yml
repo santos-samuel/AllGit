@@ -1,0 +1,3 @@
+bucket: beer-sample
+password:
+nodes: 127.0.0.1

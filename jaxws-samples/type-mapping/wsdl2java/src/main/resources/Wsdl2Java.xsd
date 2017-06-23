@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:tns="http://uniba.de/dsg/soa/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://uniba.de/dsg/soa/">
+
+	<xs:element name="getDuration" type="xs:duration"/>
+	<xs:element name="getDurationResponse" type="xs:duration"/>
+	
+	<xs:element name="getDateTime" type="xs:dateTime"/>
+	<xs:element name="getDateTimeResponse" type="xs:dateTime"/>
+
+	<xs:element name="getCollection" type="tns:getCollection"/>
+	<xs:element name="getCollectionResponse" type="tns:getCollectionResponse"/>
+	
+	<xs:element name="getEnumeration" type="tns:getEnumeration"/>
+	<xs:element name="getEnumerationResponse" type="tns:getEnumerationResponse"/>
+	
+	<!-- This is the correct mapping for a Java map although you will need to use a custom XmlAdapter to force this back into a Map -->
+	<xs:element name="getMap">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="entry" minOccurs ="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="key" type="xs:string" minOccurs="0"/>
+							<xs:element name="value" type="xs:int" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- This is the correct mapping for a Java map although you will need to use a custom XmlAdapter to force this back into a Map -->
+	<xs:element name="getMapResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="entry" minOccurs ="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="key" type="xs:string" minOccurs="0"/>
+							<xs:element name="value" type="xs:int" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="getCollection">
+		<xs:sequence>
+			<xs:element name="listin" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="getCollectionResponse">
+		<xs:sequence>
+			<xs:element name="listout" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="getEnumeration">
+		<xs:sequence>
+			<xs:element name="enumin" type="tns:rating" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="getEnumerationResponse">
+		<xs:sequence>
+			<xs:element name="enumout" type="tns:rating" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="rating">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BAD"/>
+			<xs:enumeration value="OK"/>
+			<xs:enumeration value="GOOD"/>
+			<xs:enumeration value="SUPER"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

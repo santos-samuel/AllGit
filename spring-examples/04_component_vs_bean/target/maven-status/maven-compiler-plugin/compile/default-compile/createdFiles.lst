@@ -1,0 +1,7 @@
+org\zezutom\springseries0114\part04\conf\AppConfig.class
+org\zezutom\springseries0114\part04\web\AppInitializer.class
+org\zezutom\springseries0114\part04\web\ServiceController.class
+org\zezutom\springseries0114\part04\web\WebController.class
+org\zezutom\springseries0114\part04\model\Message.class
+org\zezutom\springseries0114\part04\web\ComponentController.class
+org\zezutom\springseries0114\part04\model\MessageBuilder.class

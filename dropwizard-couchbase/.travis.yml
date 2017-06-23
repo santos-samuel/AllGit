@@ -1,0 +1,9 @@
+language: java
+
+jdk:
+  - oraclejdk8
+env:
+  - ORG_GRADLE_PROJECT_sonatypeUser=dummy ORG_GRADLE_PROJECT_sonatypePassword=dummy TERM=dumb
+
+after_success:
+  - gradle jacocoTestReport coveralls

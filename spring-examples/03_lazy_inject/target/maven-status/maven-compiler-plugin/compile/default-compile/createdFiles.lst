@@ -1,0 +1,5 @@
+org\zezutom\springseries0114\part03\lazy\Car.class
+org\zezutom\springseries0114\part03\inject\Seat.class
+org\zezutom\springseries0114\part03\lazy\Seat.class
+org\zezutom\springseries0114\part03\inject\SeatProvider.class
+org\zezutom\springseries0114\part03\inject\Car.class

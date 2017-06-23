@@ -1,0 +1,6 @@
+org\zezutom\springseries0114\part05\service\Printer.class
+org\zezutom\springseries0114\part05\conf\AppConfig.class
+org\zezutom\springseries0114\part05\service\XmlPrinter.class
+org\zezutom\springseries0114\part05\service\PrinterService.class
+org\zezutom\springseries0114\part05\service\JsonPrinter.class
+org\zezutom\springseries0114\part05\model\Person.class

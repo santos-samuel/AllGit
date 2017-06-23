@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: Dropwizard Lifecycle Support
+Implementation-Version: 1.0.0-SNAPSHOT
+Built-By: sanant
+Implementation-Vendor-Id: io.dropwizard
+Build-Jdk: 1.8.0_60
+Implementation-URL: http://www.dropwizard.io/1.0.0-SNAPSHOT/dropwizard
+ -lifecycle
+Created-By: Maven Integration for Eclipse
+

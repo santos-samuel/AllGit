@@ -1,0 +1,171 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
+    }
+}
+
+group = 'io.smartmachine'
+version = '0.2.3'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+ext.signRelease = !("$System.env.TRAVIS" == "true")
+
+configurations {
+    provided
+    testCompile.extendsFrom provided
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.couchbase.client:couchbase-client:1.4.6'
+    compile 'eu.infomas:annotation-detector:3.0.4'
+    provided 'io.dropwizard:dropwizard-core:0.8.0-rc2'
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:1.10.17"
+    testCompile "io.dropwizard:dropwizard-testing:0.8.0-rc2"
+}
+
+task integrationTest(type: Test) {
+    useJUnit {
+        includeCategories 'io.smartmachine.couchbase.test.IntegrationTests'
+    }
+}
+
+test {
+    useJUnit {
+        includeCategories 'io.smartmachine.couchbase.test.UnitTests'
+    }
+}
+
+tasks.withType(Test) {
+
+    outputs.upToDateWhen { false }
+
+    testLogging.showStandardStreams = true
+    testLogging.showExceptions = true
+    testLogging.showStackTraces = true
+    testLogging.showCauses = true
+    testLogging.exceptionFormat = "full"
+
+    beforeTest { descriptor ->
+        logger.lifecycle("\n* Running test: " + descriptor)
+    }
+
+    systemProperty 'net.spy.log.LoggerImpl', 'net.spy.memcached.compat.log.SLF4JLogger'
+
+}
+
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+javadoc {
+    classpath = configurations.compile + configurations.provided
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from "build/docs/javadoc"
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    required {
+        signRelease
+    }
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment)}
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUser, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'dropwizard-couchbase'
+                packaging 'jar'
+                description 'Couchbase persistence module for dropwizard.'
+                url 'http://smartmachine.io/dropwizard-couchbase'
+
+                scm {
+                    url 'scm:git@github.com:smartmachine/dropwizard-smartmachine.git'
+                    connection 'scm:git@github.com:smartmachine/dropwizard-smartmachine.git'
+                    developerConnection 'scm:git@github.com:smartmachine/dropwizard-smartmachine.git'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'http://www.opensource.org/licenses/mit-license.php'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'knutster'
+                        name 'Conrad Christensen'
+                    }
+                }
+            }
+        }
+    }
+}
+
+sourceSets {
+    main {
+        compileClasspath = compileClasspath + configurations.provided
+    }
+}
+
+plugins.withType(IdeaPlugin) {
+    idea {
+        module {
+            scopes.PROVIDED.plus += [configurations.provided]
+            scopes.COMPILE.minus += [configurations.provided]
+            scopes.TEST.minus += [configurations.provided]
+            scopes.RUNTIME.minus += [configurations.provided]
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
+}

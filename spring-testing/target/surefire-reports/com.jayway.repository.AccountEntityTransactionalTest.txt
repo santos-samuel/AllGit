@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.jayway.repository.AccountEntityTransactionalTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.183 sec - in com.jayway.repository.AccountEntityTransactionalTest

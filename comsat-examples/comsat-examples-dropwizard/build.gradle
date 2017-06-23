@@ -1,0 +1,29 @@
+configurations {
+    quasar
+}
+
+dependencies {
+    compile "co.paralleluniverse:comsat-dropwizard:$comsatVer"
+    runtime "org.apache.derby:derby:$derbyVer"
+    //    runtime 'mysql:mysql-connector-java:5.1.30'
+    compile  "co.paralleluniverse:quasar-core:$quasarVer"
+    quasar  "co.paralleluniverse:quasar-core:$quasarVer"
+}
+
+tasks.withType(JavaExec) {
+    main = mainClass
+    jvmArgs "-javaagent:${configurations.quasar.iterator().next()}" // =v, =d
+    jvmArgs '-server'
+    jvmArgs '-Xmx1024m'
+    //    jvmArgs "-ea"
+    classpath = sourceSets.main.runtimeClasspath 
+    args "server", "hello-world.yml"
+    systemProperty 'co.paralleluniverse.fibers.verifyInstrumentation', 'true'
+}
+
+task(runSimple, dependsOn: 'classes', type: JavaExec) {
+    main = 'com.example.helloworld.HelloWorldApplication'
+    // args "server", "hello-world.yml"
+}
+
+defaultTasks 'runSimple'

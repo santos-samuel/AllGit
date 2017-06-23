@@ -1,0 +1,64 @@
+dependencies {
+    compile "org.apache.tomcat.embed:tomcat-embed-core:$tomcatVer"
+    compile "org.apache.tomcat.embed:tomcat-embed-jasper:$tomcatVer"
+    runtime "org.apache.tomcat.embed:tomcat-embed-logging-log4j:$tomcatVer"
+    compile "org.apache.tomcat:tomcat-websocket:$tomcatVer"
+    runtime "co.paralleluniverse:comsat-jdbc:$comsatVer" // <--- ???
+    runtime "co.paralleluniverse:comsat-tomcat-loader:$comsatVer" // :jdk8
+    compile "org.apache.derby:derby:$derbyVer"
+    runtime "org.apache.tomcat:tomcat-dbcp:$tomcatVer"
+    runtime "org.slf4j:slf4j-api:$slf4jVer"
+}
+
+task deployToTomcat(type: Copy) {
+    ext.set("webappDir",new File('build/webapp'))
+    doFirst {
+        ext.set("webappDir",new File('build/webapp'))
+        delete(webappDir)
+        webappDir.mkdirs()     
+    }
+
+    // To run the WAR examples:
+    from project(":test-servlet").war
+    from project(":comsat-examples-servlet").war
+    from project(":comsat-examples-webactors").war
+    from project(":comsat-examples-jaxrs").war
+
+    // To run Spaceships:
+    // from project(":comsat-examples-spaceships").war
+    
+    from 'src/main/webapp'
+    into webappDir
+}
+
+run {
+    dependsOn classes, deployToTomcat
+    main = 'example.tomcat.EmbeddedTomcat'
+    classpath = sourceSets.main.runtimeClasspath
+    if (project.hasProperty('service')) {args('service=true')}
+    standardInput = System.in
+
+    // hot code swapping
+    systemProperty "co.paralleluniverse.actors.moduleDir", "${rootProject.projectDir}/modules"
+
+    // memory
+    jvmArgs '-Xmx1024m'
+    jvmArgs '-XX:+UseParallelGC'
+    jvmArgs '-XX:+UseCondCardMark'
+    // jvmArgs '-XX:+UseG1GC', '-XX:MaxGCPauseMillis=50'
+
+    // profiling
+    // jvmArgs '-XX:+UnlockCommercialFeatures', '-XX:+FlightRecorder'
+    // jvmArgs '-verbose:gc'
+    // jvmArgs '-XX:+UnlockDiagnosticVMOptions', '-XX:+TraceClassLoading', '-XX:+LogCompilation' // use with jitwatch
+    // jvmArgs '-XX:+UnlockDiagnosticVMOptions', '-XX:+PrintInlining'
+
+    // debugging
+    jvmArgs '-ea'
+    // systemProperty 'co.paralleluniverse.fibers.verifyInstrumentation', 'true'
+    // systemProperty "co.paralleluniverse.debugMode", "true"
+    systemProperty "co.paralleluniverse.globalFlightRecorder", "true"
+    systemProperty "co.paralleluniverse.flightRecorderDumpFile", "war.log"
+    systemProperty "co.paralleluniverse.monitoring.flightRecorderLevel", "5"
+    systemProperty "co.paralleluniverse.monitoring.flightRecorderSize","100000" 
+}

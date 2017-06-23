@@ -1,0 +1,28 @@
+configurations {
+    quasar
+}
+
+dependencies {
+    compile "org.eclipse.jetty.websocket:javax-websocket-server-impl:$jettyVer"
+    compile "co.paralleluniverse:quasar-core:$quasarVer"
+    compile "co.paralleluniverse:comsat-actors-servlet:$comsatVer"
+    compile "co.paralleluniverse:comsat-jax-rs-client:$comsatVer"
+    quasar  "co.paralleluniverse:quasar-core:$quasarVer"
+
+    compile project(':test-servlet')
+    compile project(':comsat-examples-servlet')
+    
+    quasar  "co.paralleluniverse:quasar-core:$quasarVer"
+}
+
+run {
+    if (project.hasProperty('mainClass') && mainClass != '')
+        main = mainClass
+    else 
+        main = 'co.paralleluniverse.example.JettyWebActor'        
+    jvmArgs "-javaagent:${configurations.quasar.iterator().next()}" // =v, =d
+    jvmArgs "-ea"
+    // systemProperty 'co.paralleluniverse.fibers.verifyInstrumentation', 'true'
+}
+
+defaultTasks 'run'

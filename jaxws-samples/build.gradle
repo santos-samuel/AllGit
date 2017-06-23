@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-cargo-plugin:2.2.2'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    repositories {
+        jcenter()
+    }
+}
+
+def webProjects() {
+    subprojects.findAll { subproject -> subproject.plugins.hasPlugin('war') }
+}
+
+gradle.projectsEvaluated {
+    configure(webProjects()) {
+        apply plugin: 'com.bmuschko.cargo'
+
+        cargo {
+            containerId = 'glassfish4x'
+
+            local {
+                installer {
+                    installUrl = 'http://download.java.net/glassfish/4.1.1/release/glassfish-4.1.1.zip'
+                    downloadDir = file("$buildDir/download")
+                    extractDir = file("$buildDir/extract")
+                }
+            }
+        }
+
+        cargoRunLocal.dependsOn assemble
+    }
+}
